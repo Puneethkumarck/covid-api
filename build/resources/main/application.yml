@@ -1,0 +1,72 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /covid
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+  circuitbreaker:
+    enabled: true
+  httpclient:
+    max-connections: 200
+    max-connections-per-route: 50
+    connection-timeout: 4000
+  clients:
+    covidapi:
+      url: https://covid-193.p.rapidapi.com
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED #Configures the type of the sliding window which is used to record the outcome of calls when the CircuitBreaker is closed.
+        slidingWindowSize: 5  # 100 Configures the size of the sliding window which is used to record the outcome of calls when the CircuitBreaker is closed.
+        failureRateThreshold: 20 # 50 Configures the failure rate threshold in percentage. When the failure rate is equal or greater than the threshold the CircuitBreaker transitions to open and starts short-circuiting calls.
+        slowCallRateThreshold: 20 # 100 Configures a threshold in percentage. The CircuitBreaker considers a call as slow when the call duration is greater than slowCallDurationThreshold
+        slowCallDurationThreshold: 50ms #60000 Configures the duration threshold above which calls are considered as slow and increase the rate of slow calls.
+        minimumNumberOfCalls: 20 # 100 Configures the minimum number of calls which are required (per sliding window period) before the CircuitBreaker can calculate the error rate or slow call rate.
+        waitDurationInOpenState: 20s # 60000ms  The time that the CircuitBreaker should wait before transitioning from open to half-open.
+        waitDurationInHalfOpenState: 10s # 60000ms  The time that the CircuitBreaker should wait before transitioning from half-open to open.
+        waitDurationInClosedState: 20s # 60000ms  The time that the CircuitBreaker should wait before transitioning from closed to half-open.
+
+
+  ratelimiter:
+    instances:
+      covid19ratelimiter:
+        limitForPeriod: 100 # The number of permissions available during one limit refresh period
+        limitRefreshPeriod: 1s # The period of a limit refresh. After each period the rate limiter sets its permissions count back to the limitForPeriod value
+        timeoutDuration: 1s # 	The default wait time a thread waits for a permission
+        registerHealthIndicator: true
+
+
+  timelimiter:
+    instances:
+      covid19timelimiter:
+        timeoutDuration: 2s #timeout duration
+
+logging:
+  level:
+    feign: DEBUG
+    org:
+      springframework: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    env.enabled: true
+    health:
+      enabled: true
+      show-details: always
+    info.enabled: true
+    prometheus.enabled: true
+    loggers.enabled: true
+    metrics.enabled: true
+    mappings.enabled: true
+
+

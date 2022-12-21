@@ -1,0 +1,35 @@
+{
+  "get": "history",
+  "parameters": {
+    "country": "Tunisia",
+    "day": "2022-06-18"
+  },
+  "errors": [],
+  "results": 1,
+  "response": [
+    {
+      "continent": "Africa",
+      "country": "Tunisia",
+      "population": 12060079,
+      "cases": {
+        "new": null,
+        "active": null,
+        "critical": 29,
+        "recovered": null,
+        "1M_pop": "86602",
+        "total": 1044426
+      },
+      "deaths": {
+        "new": null,
+        "1M_pop": "2376",
+        "total": 28655
+      },
+      "tests": {
+        "1M_pop": "385388",
+        "total": 4647813
+      },
+      "day": "2022-06-18",
+      "time": "2022-06-18T00:00:03+00:00"
+    }
+  ]
+}
